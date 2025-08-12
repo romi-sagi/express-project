@@ -1,4 +1,4 @@
-import { getAllTasksModel, getTaskByIdModel } from "../models/taskModels";
+import { deleteTaskByIdModel, getAllTasksModel, getTaskByIdModel } from "../models/taskModels";
 
 export const getAllTasks = () => {
     try {
@@ -16,4 +16,14 @@ export const getTaskById = (id: string) => {
     }
 
     return task;
+}
+
+export const deleteTaskById = (id: string) => {
+    const tasks = deleteTaskByIdModel(id);
+
+    if (!tasks) {
+        throw new Error(`Task with id ${id} not found`);
+    }
+
+    return tasks;
 }
