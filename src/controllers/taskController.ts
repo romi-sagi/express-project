@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import taskController from "../services/taskService";
-import { Task } from "../taskDto";
 import { convertTaskToDto } from "../converters/taskConverter";
+import taskDal from "../dal/taskDal";
 
-type GetTaskByIdParams = { id: string };
+type TaskIdParams = { id: string };
 
-const getTasks = (request: Request, response: Response) => {
+const getTasks = (_: Request, response: Response) => {
     try {
         const tasks = taskController.getAllTasks();
 
@@ -15,7 +15,7 @@ const getTasks = (request: Request, response: Response) => {
     }
 }
 
-const getTaskById = (request: Request<GetTaskByIdParams, {}, Task>, response: Response) => {
+const getTaskById = (request: Request<TaskIdParams>, response: Response) => {
     const taskId = request.params.id;
 
     try {
@@ -30,7 +30,22 @@ const getTaskById = (request: Request<GetTaskByIdParams, {}, Task>, response: Re
     }
 }
 
+export const deleteTaskById = (request: Request<TaskIdParams>, response: Response) => {
+    try {
+        const taskId = request.params.id;
+        const isDeleted = taskDal.deleteTaskById(taskId);
+
+        if (!isDeleted) return response.status(404).send({ message: 'task not found' });
+
+        return response.status(200).json({ deleted: true });
+
+    } catch (err) {
+        response.status(500).json({ message: "internal error occurred" });
+    }
+}
+
 export default {
     getTasks,
-    getTaskById
+    getTaskById,
+    deleteTaskById
 };
