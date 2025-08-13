@@ -29,7 +29,6 @@ const createTask = (data: CreateTask): Task => {
     return task;
 }
 
-
 export default {
     getAllTasks,
     getTaskById,
