@@ -1,15 +1,16 @@
-import { getAllTasksModel, getTaskByIdModel } from "../models/taskModels";
+import { getAllTasksDal, getTaskDalById } from "../dal/taskDal";
+import { Task } from "../taskDto";
 
-export const getAllTasks = () => {
+export const getAllTasks = (): Task[] => {
     try {
-        return getAllTasksModel();
+        return getAllTasksDal();
     } catch (e) {
         throw new Error("Failed to get tasks");
     }
 }
 
-export const getTaskById = (id: string) => {
-    const task = getTaskByIdModel(id);
+export const getTaskById = (id: string): Task => {
+    const task = getTaskDalById(id);
 
     if (!task) {
         throw new Error(`Task with id ${id} not found`);
