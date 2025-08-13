@@ -1,8 +1,8 @@
 import express from "express";
-import { getTaskByIdController, getTasksController } from "../controllers/taskController";
+import taskController from "../controllers/taskController";
 const router = express.Router();
 
-router.get('/tasks', getTasksController);
-router.get('/:id', getTaskByIdController)
+router.get('/tasks', taskController.getTasks);
+router.get('/:id', taskController.getTaskById)
 
 export default router;

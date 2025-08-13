@@ -1,11 +1,11 @@
 import { tasks } from "../data/tasksStore";
 import { Task } from "../taskDto";
 
-export const getAllTasksDal = (): Task[] => {
+const getAllTasks = (): Task[] => {
     return tasks;
 }
 
-export const getTaskDalById = (id: string): Task => {
+const getTaskById = (id: string): Task => {
     const task = tasks.find((t) => t.id === id);
     if (!task) {
         throw new Error('Task is not found');
@@ -13,3 +13,8 @@ export const getTaskDalById = (id: string): Task => {
 
     return task;
 }
+
+export default {
+    getAllTasks,
+    getTaskById
+};

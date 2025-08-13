@@ -1,30 +1,42 @@
 import { Request, Response } from "express";
-import { getAllTasks, getTaskById } from "../services/taskService";
+import taskController from "../services/taskService";
 import { Task } from "../taskDto";
-import { taskConverterToDto, tasksConverterToDto } from "../converters/taskConverter";
+import { convertTaskToDto } from "../converters/taskConverter";
 
 type getTaskByIdParams = { id: string };
 
-export const getTasksController = (request: Request, response: Response) => {
+const getTasks = (request: Request, response: Response) => {
     try {
-        const tasks = getAllTasks();
+        const tasks = taskController.getAllTasks();
 
-        response.status(200).json(tasksConverterToDto(tasks));
+        response.status(200).json(tasks.map(convertTaskToDto));
     } catch (err) {
         const message = err instanceof Error ? err.message : 'Something went wrong';
-        response.status(500).json({ error: message });
+        console.log(message);
+
+        response.status(500).json("internal error occurred");
     }
 }
 
-export const getTaskByIdController = (request: Request<getTaskByIdParams, {}, Task>, response: Response) => {
+const getTaskById = (request: Request<getTaskByIdParams, {}, Task>, response: Response) => {
     const taskId = request.params.id;
 
     try {
-        const task = getTaskById(taskId)
+        const task = taskController.getTaskById(taskId)
 
-        response.status(200).json(taskConverterToDto(task));
+        if (!task) return response.status(404).send("task not found");
+
+        return response.status(200).json(convertTaskToDto(task));
+
     } catch (err) {
         const message = err instanceof Error ? err.message : 'Something went wrong';
-        response.status(404).json({ error: message });
+        console.log(message);
+
+        response.status(500).send("internal error occurred");
     }
 }
+
+export default {
+    getTasks,
+    getTaskById
+};
