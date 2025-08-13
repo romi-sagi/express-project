@@ -41,8 +41,7 @@ export const deleteTaskById = (request: Request<{ id: string }, {}, Task>, respo
         return response.status(200).json(tasks.map(convertTaskToDto));
 
     } catch (err) {
-        const message = err instanceof Error ? err.message : 'Something went wrong';
-        response.status(404).json({ error: message });
+        response.status(404).json({ message: "internal error occurred" });
     }
 }
 
