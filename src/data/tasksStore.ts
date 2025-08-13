@@ -1,3 +1,3 @@
-import { Task } from "../models/taskModels";
+import { Task } from "../taskDto";
 
 export const tasks: Task[] = [];
