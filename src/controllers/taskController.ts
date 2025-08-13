@@ -34,14 +34,14 @@ const getTaskById = (request: Request<TaskIdParams, {}, Task>, response: Respons
 export const deleteTaskById = (request: Request<TaskIdParams, {}, Task>, response: Response) => {
     try {
         const taskId = request.params.id;
-        const tasks = taskDal.deleteTaskById(taskId);
+        const isDeleted = taskDal.deleteTaskById(taskId);
 
-        if (!tasks) return response.status(404).send({ message: 'task not found' });
+        if (!isDeleted) return response.status(404).send({ message: 'task not found' });
 
-        return response.status(200).json(tasks.map(convertTaskToDto));
+        return response.status(200).json({ deleted: true });
 
     } catch (err) {
-        response.status(404).json({ message: "internal error occurred" });
+        response.status(500).json({ message: "internal error occurred" });
     }
 }
 
