@@ -5,18 +5,13 @@ const getAllTasks = (): Task[] => {
     return tasks;
 }
 
-const getTaskById = (id: string): Task => {
-    const task = tasks.find((t) => t.id === id);
-    if (!task) {
-        throw new Error('Task is not found');
-    }
-
-    return task;
+const getTaskById = (id: string): Task | undefined => {
+    return tasks.find((t) => t.id === id);
 }
 
-export const deleteTaskDalById = (id: string) => {
+const deleteTaskById = (id: string): Task[] | undefined => {
     const index = tasks.findIndex(task => task.id === id);
-    if (index === -1) return null;
+    if (index === -1) return undefined;
 
     tasks.splice(index, 1);
 
@@ -25,5 +20,6 @@ export const deleteTaskDalById = (id: string) => {
 
 export default {
     getAllTasks,
-    getTaskById
+    getTaskById,
+    deleteTaskById
 };
