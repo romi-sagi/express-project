@@ -1,4 +1,4 @@
-import { getAllTasksDal, getTaskDalById } from "../dal/taskDal";
+import { deleteTaskDalById, getAllTasksDal, getTaskDalById } from "../dal/taskDal";
 import { Task } from "../taskDto";
 
 export const getAllTasks = (): Task[] => {
@@ -20,7 +20,7 @@ export const getTaskById = (id: string): Task => {
 }
 
 export const deleteTaskById = (id: string) => {
-    const tasks = deleteTaskByIdModel(id);
+    const tasks = deleteTaskDalById(id);
 
     if (!tasks) {
         throw new Error(`Task with id ${id} not found`);

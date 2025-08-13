@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllTasks, getTaskById } from "../services/taskService";
+import { deleteTaskById, getAllTasks, getTaskById } from "../services/taskService";
 import { Task } from "../taskDto";
 import { taskConverterToDto, tasksConverterToDto } from "../converters/taskConverter";
 
@@ -34,7 +34,7 @@ export const deleteTaskByIdController = (request: Request<{ id: string }, {}, Ta
         const taskId = request.params.id;
         const tasks = deleteTaskById(taskId);
 
-        response.status(200).json(tasks);
+        response.status(200).json(tasksConverterToDto(tasks));
     } catch (err) {
         const message = err instanceof Error ? err.message : 'Something went wrong';
         response.status(404).json({ error: message });
