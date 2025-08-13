@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 import taskController from "../services/taskService";
-import { Task } from "../taskDto";
 import { convertTaskToDto } from "../converters/taskConverter";
 import taskDal from "../dal/taskDal";
 
 type TaskIdParams = { id: string };
 
-const getTasks = (request: Request, response: Response) => {
+const getTasks = (_: Request, response: Response) => {
     try {
         const tasks = taskController.getAllTasks();
 
@@ -16,7 +15,7 @@ const getTasks = (request: Request, response: Response) => {
     }
 }
 
-const getTaskById = (request: Request<TaskIdParams, {}, Task>, response: Response) => {
+const getTaskById = (request: Request<TaskIdParams>, response: Response) => {
     const taskId = request.params.id;
 
     try {
@@ -31,7 +30,7 @@ const getTaskById = (request: Request<TaskIdParams, {}, Task>, response: Respons
     }
 }
 
-export const deleteTaskById = (request: Request<TaskIdParams, {}, Task>, response: Response) => {
+export const deleteTaskById = (request: Request<TaskIdParams>, response: Response) => {
     try {
         const taskId = request.params.id;
         const isDeleted = taskDal.deleteTaskById(taskId);
