@@ -4,7 +4,7 @@ import { Task } from "../taskDto";
 import { convertTaskToDto } from "../converters/taskConverter";
 import taskDal from "../dal/taskDal";
 
-type GetTaskByIdParams = { id: string };
+type TaskIdParams = { id: string };
 
 const getTasks = (request: Request, response: Response) => {
     try {
@@ -16,7 +16,7 @@ const getTasks = (request: Request, response: Response) => {
     }
 }
 
-const getTaskById = (request: Request<GetTaskByIdParams, {}, Task>, response: Response) => {
+const getTaskById = (request: Request<TaskIdParams, {}, Task>, response: Response) => {
     const taskId = request.params.id;
 
     try {
@@ -31,7 +31,7 @@ const getTaskById = (request: Request<GetTaskByIdParams, {}, Task>, response: Re
     }
 }
 
-export const deleteTaskById = (request: Request<{ id: string }, {}, Task>, response: Response) => {
+export const deleteTaskById = (request: Request<TaskIdParams, {}, Task>, response: Response) => {
     try {
         const taskId = request.params.id;
         const tasks = taskDal.deleteTaskById(taskId);
