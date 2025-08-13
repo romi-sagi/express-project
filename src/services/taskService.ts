@@ -5,7 +5,7 @@ const getAllTasks = (): Task[] => {
     return taskDal.getAllTasks();
 }
 
-const getTaskById = (id: string): Task | null => {
+const getTaskById = (id: string): Task | undefined => {
     return taskDal.getTaskById(id);
 }
 

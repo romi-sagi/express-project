@@ -5,13 +5,8 @@ const getAllTasks = (): Task[] => {
     return tasks;
 }
 
-const getTaskById = (id: string): Task => {
-    const task = tasks.find((t) => t.id === id);
-    if (!task) {
-        throw new Error('Task is not found');
-    }
-
-    return task;
+const getTaskById = (id: string): Task | undefined => {
+    return tasks.find((t) => t.id === id);
 }
 
 export default {
