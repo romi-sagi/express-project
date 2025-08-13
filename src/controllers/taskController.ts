@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
-import taskController from "../services/taskService";
 import { convertTaskToDto } from "../converters/taskConverter";
-import taskDal from "../dal/taskDal";
+import taskService from "../services/taskService";
 
 type TaskIdParams = { id: string };
 
 const getTasks = (_: Request, response: Response) => {
     try {
-        const tasks = taskController.getAllTasks();
+        const tasks = taskService.getAllTasks();
 
         response.status(200).json(tasks.map(convertTaskToDto));
     } catch (err) {
@@ -19,7 +18,7 @@ const getTaskById = (request: Request<TaskIdParams>, response: Response) => {
     const taskId = request.params.id;
 
     try {
-        const task = taskController.getTaskById(taskId)
+        const task = taskService.getTaskById(taskId)
 
         if (!task) return response.status(404).send({ message: 'task not found' });
 
@@ -30,22 +29,34 @@ const getTaskById = (request: Request<TaskIdParams>, response: Response) => {
     }
 }
 
-export const deleteTaskById = (request: Request<TaskIdParams>, response: Response) => {
+const deleteTaskById = (request: Request<TaskIdParams>, response: Response) => {
     try {
         const taskId = request.params.id;
-        const isDeleted = taskDal.deleteTaskById(taskId);
+        const isDeleted = taskService.deleteTaskById(taskId);
 
         if (!isDeleted) return response.status(404).send({ message: 'task not found' });
 
-        return response.status(200).json({ deleted: true });
+        return response.status(200).send({ deleted: true });
 
     } catch (err) {
-        response.status(500).json({ message: "internal error occurred" });
+        response.status(500).send({ message: "internal error occurred" });
+    }
+}
+
+const createTask = (request: Request, response: Response) => {
+    try {
+        const newTask = taskService.createTask(request.body);
+
+        response.status(201).send({ message: `task ${newTask.id} created` });
+    }
+    catch (err) {
+        response.status(500).send({ message: "internal error occurred" });
     }
 }
 
 export default {
     getTasks,
     getTaskById,
-    deleteTaskById
+    deleteTaskById,
+    createTask
 };

@@ -1,5 +1,5 @@
 import taskDal from "../dal/taskDal";
-import { Task } from "../taskDto";
+import { CreateTask, Task } from "../taskDto";
 
 const getAllTasks = (): Task[] => {
     return taskDal.getAllTasks();
@@ -13,8 +13,13 @@ const deleteTaskById = (id: string) => {
     return taskDal.deleteTaskById(id);
 }
 
+ export const createTask = (requestBody: CreateTask) => {
+    return taskDal.createTask(requestBody);
+}
+
 export default {
     getAllTasks,
     getTaskById,
-    deleteTaskById
+    deleteTaskById,
+    createTask
 };
