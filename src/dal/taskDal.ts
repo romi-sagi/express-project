@@ -1,5 +1,5 @@
 import { tasks } from "../data/tasksStore";
-import { CreateTask, Task } from "../taskDto";
+import { CreateTaskDetails, Task } from "../taskDto";
 import { v4 as uuidv4 } from "uuid";
 
 const getAllTasks = (): Task[] => {
@@ -19,7 +19,7 @@ const deleteTaskById = (id: string): boolean => {
     return true;
 }
 
-const createTask = (data: CreateTask): Task => {
+const createTask = (data: CreateTaskDetails): Task => {
     const task: Task = {
         id: uuidv4(),
         ...data

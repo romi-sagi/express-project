@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { convertTaskToDto } from "../converters/taskConverter";
 import taskService from "../services/taskService";
+import { CreateTaskDetails } from "../taskDto";
 
 type TaskIdParams = { id: string };
 
@@ -43,7 +44,7 @@ const deleteTaskById = (request: Request<TaskIdParams>, response: Response) => {
     }
 }
 
-const createTask = (request: Request, response: Response) => {
+const createTask = (request: Request<CreateTaskDetails>, response: Response) => {
     try {
         const newTask = taskService.createTask(request.body);
 

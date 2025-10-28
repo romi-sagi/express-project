@@ -10,7 +10,7 @@ export interface Task {
     repeat?: Iteration
 }
 
-export interface CreateTask {
+export interface CreateTaskDetails {
     title: string,
     description?: string,
     completed: boolean,
