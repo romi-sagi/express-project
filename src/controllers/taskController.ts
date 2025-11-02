@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { convertTaskToDto } from "../converters/taskConverter";
 import taskService from "../services/taskService";
 import { CreateTaskDetails } from "../taskDto";
+import { isValidTask } from "../validation";
 
 type TaskIdParams = { id: string };
 
@@ -46,6 +47,10 @@ const deleteTaskById = (request: Request<TaskIdParams>, response: Response) => {
 
 const createTask = (request: Request<CreateTaskDetails>, response: Response) => {
     try {
+        if (!isValidTask(request.body)) {
+            return response.status(400).send({ error: "Invalid Task" });
+        }
+
         const newTask = taskService.createTask(request.body);
 
         response.status(201).send({ message: `task ${newTask.id} created` });
