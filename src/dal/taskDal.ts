@@ -9,6 +9,12 @@ const getTaskById = (id: string): Task | undefined => {
     return tasks.find((t) => t.id === id);
 }
 
+const filterByMyDay = () => {
+    const filteredTasks = tasks.filter((task) => task.myDay === true);
+
+    return filteredTasks;
+}
+
 const deleteTaskById = (id: string): boolean => {
     const index = tasks.findIndex(task => task.id === id);
     if (index === -1) return false;
@@ -21,5 +27,6 @@ const deleteTaskById = (id: string): boolean => {
 export default {
     getAllTasks,
     getTaskById,
+    filterByMyDay,
     deleteTaskById
 };

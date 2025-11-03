@@ -9,6 +9,10 @@ const getTaskById = (id: string): Task | undefined => {
     return taskDal.getTaskById(id);
 }
 
+export const filterByMyDay = () => {
+    return taskDal.filterByMyDay();
+}
+
 const deleteTaskById = (id: string) => {
     return taskDal.deleteTaskById(id);
 }
@@ -16,5 +20,6 @@ const deleteTaskById = (id: string) => {
 export default {
     getAllTasks,
     getTaskById,
+    filterByMyDay,
     deleteTaskById
 };

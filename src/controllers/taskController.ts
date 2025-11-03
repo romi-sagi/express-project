@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import taskController from "../services/taskService";
 import { convertTaskToDto } from "../converters/taskConverter";
 import taskDal from "../dal/taskDal";
+import { Task } from "../taskDto";
+import taskService from "../services/taskService";
 
 type TaskIdParams = { id: string };
 
@@ -30,6 +32,17 @@ const getTaskById = (request: Request<TaskIdParams>, response: Response) => {
     }
 }
 
+const filterMyDayTasks = (_: Request, response: Response) => {
+    try {
+        const tasks = taskService.filterByMyDay();
+
+        response.status(200).json(tasks.map(convertTaskToDto));
+    } catch (err) {
+        response.status(500).send({ message: "internal error occurred" });
+    }
+}
+
+
 export const deleteTaskById = (request: Request<TaskIdParams>, response: Response) => {
     try {
         const taskId = request.params.id;
@@ -47,5 +60,6 @@ export const deleteTaskById = (request: Request<TaskIdParams>, response: Respons
 export default {
     getTasks,
     getTaskById,
+    filterMyDayTasks,
     deleteTaskById
 };
