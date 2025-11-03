@@ -1,5 +1,6 @@
 import { tasks } from "../data/tasksStore";
-import { Task } from "../taskDto";
+import { CreateTaskDetails, Task } from "../taskDto";
+import { v4 as uuidv4 } from "uuid";
 
 const getAllTasks = (): Task[] => {
     return tasks;
@@ -18,8 +19,19 @@ const deleteTaskById = (id: string): boolean => {
     return true;
 }
 
+const createTask = (data: CreateTaskDetails): Task => {
+    const task: Task = {
+        id: uuidv4(),
+        ...data
+    };
+    tasks.push(task);
+
+    return task;
+}
+
 export default {
     getAllTasks,
     getTaskById,
-    deleteTaskById
+    deleteTaskById,
+    createTask,
 };
