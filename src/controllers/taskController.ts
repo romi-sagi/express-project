@@ -1,15 +1,14 @@
 import { Request, Response } from "express";
-import taskController from "../services/taskService";
 import { convertTaskToDto } from "../converters/taskConverter";
-import taskDal from "../dal/taskDal";
-import { Task } from "../taskDto";
 import taskService from "../services/taskService";
+import { CreateTaskDetails } from "../taskDto";
+import { isValidTask } from "../validation";
 
 type TaskIdParams = { id: string };
 
 const getTasks = (_: Request, response: Response) => {
     try {
-        const tasks = taskController.getAllTasks();
+        const tasks = taskService.getAllTasks();
 
         response.status(200).json(tasks.map(convertTaskToDto));
     } catch (err) {
@@ -21,7 +20,7 @@ const getTaskById = (request: Request<TaskIdParams>, response: Response) => {
     const taskId = request.params.id;
 
     try {
-        const task = taskController.getTaskById(taskId)
+        const task = taskService.getTaskById(taskId)
 
         if (!task) return response.status(404).send({ message: 'task not found' });
 
@@ -32,34 +31,38 @@ const getTaskById = (request: Request<TaskIdParams>, response: Response) => {
     }
 }
 
-const filterMyDayTasks = (_: Request, response: Response) => {
+const deleteTaskById = (request: Request<TaskIdParams>, response: Response) => {
     try {
-        const tasks = taskService.filterByMyDay();
+        const taskId = request.params.id;
+        const isDeleted = taskService.deleteTaskById(taskId);
 
-        response.status(200).json(tasks.map(convertTaskToDto));
+        if (!isDeleted) return response.status(404).send({ message: 'task not found' });
+
+        return response.status(200).send({ deleted: true });
+
     } catch (err) {
         response.status(500).send({ message: "internal error occurred" });
     }
 }
 
-
-export const deleteTaskById = (request: Request<TaskIdParams>, response: Response) => {
+const createTask = (request: Request<CreateTaskDetails>, response: Response) => {
     try {
-        const taskId = request.params.id;
-        const isDeleted = taskDal.deleteTaskById(taskId);
+        if (!isValidTask(request.body)) {
+            return response.status(400).send({ error: "Invalid Task" });
+        }
 
-        if (!isDeleted) return response.status(404).send({ message: 'task not found' });
+        const newTask = taskService.createTask(request.body);
 
-        return response.status(200).json({ deleted: true });
-
-    } catch (err) {
-        response.status(500).json({ message: "internal error occurred" });
+        response.status(201).send({ message: `task ${newTask.id} created` });
+    }
+    catch (err) {
+        response.status(500).send({ message: "internal error occurred" });
     }
 }
 
 export default {
     getTasks,
     getTaskById,
-    filterMyDayTasks,
-    deleteTaskById
+    deleteTaskById,
+    createTask
 };
