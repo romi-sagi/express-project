@@ -6,9 +6,15 @@ import { isValidTask } from "../validation";
 
 type TaskIdParams = { id: string };
 
-const getTasks = (_: Request, response: Response) => {
+const getTasks = (request: Request, response: Response) => {
     try {
-        const tasks = taskService.getAllTasks();
+        const filter =  request.query.filter === 'string'
+            ? request.query.filter
+            : undefined;
+
+        const tasks = taskService.getTasks(filter);
+
+        if (!tasks) return response.status(400).send({ error: "Invalid Filter" });
 
         response.status(200).json(tasks.map(convertTaskToDto));
     } catch (err) {

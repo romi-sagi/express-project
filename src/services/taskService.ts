@@ -1,16 +1,12 @@
 import taskDal from "../dal/taskDal";
-import {CreateTaskDetails, Task} from "../taskDto";
+import { CreateTaskDetails, Task } from "../taskDto";
 
-const getAllTasks = (): Task[] => {
-    return taskDal.getAllTasks();
+const getTasks = (filter: string | undefined): Task[] | undefined => {
+    return taskDal.getTasks(filter);
 }
 
 const getTaskById = (id: string): Task | undefined => {
     return taskDal.getTaskById(id);
-}
-
-export const filterByMyDay = () => {
-    return taskDal.filterByMyDay();
 }
 
 const deleteTaskById = (id: string) => {
@@ -22,9 +18,8 @@ export const createTask = (requestBody: CreateTaskDetails) => {
 }
 
 export default {
-    getAllTasks,
+    getTasks,
     getTaskById,
-    createTask
-    filterByMyDay,
+    createTask,
     deleteTaskById
 };

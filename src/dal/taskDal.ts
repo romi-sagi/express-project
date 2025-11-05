@@ -2,18 +2,20 @@ import { tasks } from "../data/tasksStore";
 import { CreateTaskDetails, Task } from "../taskDto";
 import { v4 as uuidv4 } from "uuid";
 
-const getAllTasks = (): Task[] => {
+const getTasks = (filter: string | undefined): Task[] | undefined => {
+    if (filter) {
+        if (filter === 'myday') {
+            return tasks.filter((task) => task.myDay === true);
+        }
+
+        return undefined;
+    }
+
     return tasks;
 }
 
 const getTaskById = (id: string): Task | undefined => {
     return tasks.find((t) => t.id === id);
-}
-
-const filterByMyDay = () => {
-    const filteredTasks = tasks.filter((task) => task.myDay === true);
-
-    return filteredTasks;
 }
 
 const deleteTaskById = (id: string): boolean => {
@@ -36,9 +38,8 @@ const createTask = (data: CreateTaskDetails): Task => {
 }
 
 export default {
-    getAllTasks,
+    getTasks,
     getTaskById,
-    filterByMyDay,
     deleteTaskById,
     createTask,
 };
