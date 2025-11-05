@@ -20,6 +20,6 @@ export const createTask = (requestBody: CreateTaskDetails) => {
 export default {
     getTasks,
     getTaskById,
-    createTask,
-    deleteTaskById
+    deleteTaskById,
+    createTask
 };
