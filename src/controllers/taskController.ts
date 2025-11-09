@@ -60,9 +60,23 @@ const createTask = (request: Request<CreateTaskDetails>, response: Response) => 
     }
 }
 
+
+const updateTask = (request: Request<TaskIdParams>, response: Response) => {
+try {
+    const taskId = request.params.id;
+    const task = taskService.updateTask(taskId, request.body)
+
+    response.status(201).json(convertTaskToDto(task));
+ } catch (err) {
+        response.status(500).send({ message: "internal error occurred" });
+    }
+}
+
+
 export default {
     getTasks,
     getTaskById,
     deleteTaskById,
-    createTask
+    createTask,
+    updateTask
 };

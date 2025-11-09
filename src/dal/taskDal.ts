@@ -10,8 +10,12 @@ const getTaskById = (id: string): Task | undefined => {
     return tasks.find((t) => t.id === id);
 }
 
+const getIndexById = (id: string): number => {
+    return tasks.findIndex(task => task.id === id);
+}
+
 const deleteTaskById = (id: string): boolean => {
-    const index = tasks.findIndex(task => task.id === id);
+    const index = getIndexById(id);
     if (index === -1) return false;
 
     tasks.splice(index, 1);
@@ -29,9 +33,20 @@ const createTask = (data: CreateTaskDetails): Task => {
     return task;
 }
 
+const updateTask = (id: string, updatedTask: Task): Task | undefined=> {
+    const index = getIndexById(id);
+    if (index === -1) return undefined;
+
+    tasks[index] = ...updateTask;
+
+    return tasks[taskid];
+}
+
+
 export default {
     getAllTasks,
     getTaskById,
     deleteTaskById,
     createTask,
+    updateTask
 };
