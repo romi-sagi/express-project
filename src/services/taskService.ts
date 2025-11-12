@@ -1,5 +1,5 @@
 import taskDal from "../dal/taskDal";
-import {CreateTaskDetails, Task} from "../taskDto";
+import { CreateTaskDetails, Task } from "../taskDto";
 
 const getAllTasks = (): Task[] => {
     return taskDal.getAllTasks();

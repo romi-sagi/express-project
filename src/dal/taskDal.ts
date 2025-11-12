@@ -1,4 +1,5 @@
 import { tasks } from "../data/tasksStore";
+import { TaskNotfoundError } from "../errorValidation/taskNotFoundError";
 import { CreateTaskDetails, Task } from "../taskDto";
 import { v4 as uuidv4 } from "uuid";
 
@@ -14,13 +15,11 @@ const getIndexById = (id: string): number => {
     return tasks.findIndex(task => task.id === id);
 }
 
-const deleteTaskById = (id: string): boolean => {
+const deleteTaskById = (id: string): void => {
     const index = getIndexById(id);
-    if (index === -1) return false;
+    if (index === -1)  throw new TaskNotfoundError('task not found');
 
     tasks.splice(index, 1);
-
-    return true;
 }
 
 const createTask = (data: CreateTaskDetails): Task => {
@@ -33,15 +32,14 @@ const createTask = (data: CreateTaskDetails): Task => {
     return task;
 }
 
-const updateTask = (id: string, updatedTask: Task): Task | undefined=> {
+const updateTask = (id: string, updatedTask: Task): Task => {
     const index = getIndexById(id);
-    if (index === -1) return undefined;
+    if (index === -1) throw new TaskNotfoundError('task not found');
 
-    tasks[index] = ...updateTask;
+    tasks[index] = { ...tasks[index], ...updatedTask };
 
-    return tasks[taskid];
+    return tasks[index];
 }
-
 
 export default {
     getAllTasks,
