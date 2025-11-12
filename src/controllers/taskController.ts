@@ -2,23 +2,23 @@ import { Request, Response } from "express";
 import { convertTaskToDto } from "../converters/taskConverter";
 import taskService from "../services/taskService";
 import { CreateTaskDetails } from "../taskDto";
-import { isValidTask } from "../validation";
+import { isValidTask, validateFilter } from "../validation";
+import { FilterError } from "../errorValidation/filterError";
 
 type TaskIdParams = { id: string };
 
-const getTasks = (request: Request, response: Response) => {
+const getTasks = (request: Request<{}, {}, {}, { filter?: string }>, response: Response) => {
     try {
-        const filter =  request.query.filter === 'string'
-            ? request.query.filter
-            : undefined;
+        const validFilter = validateFilter(request.query.filter)
 
-        const tasks = taskService.getTasks(filter);
+        const tasks = taskService.getTasks(validFilter)
 
-        if (!tasks) return response.status(400).send({ error: "Invalid Filter" });
+        return response.status(200).json(tasks.map(convertTaskToDto));
 
-        response.status(200).json(tasks.map(convertTaskToDto));
     } catch (err) {
-        response.status(500).json("internal error occurred");
+        if (err instanceof FilterError) return response.status(400).send({ error: "Invalid Filter" });
+
+        response.status(500).send({ message: "internal error occurred" });
     }
 }
 

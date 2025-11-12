@@ -2,13 +2,9 @@ import { tasks } from "../data/tasksStore";
 import { CreateTaskDetails, Task } from "../taskDto";
 import { v4 as uuidv4 } from "uuid";
 
-const getTasks = (filter: string | undefined): Task[] | undefined => {
-    if (filter) {
-        if (filter === 'myday') {
-            return tasks.filter((task) => task.myDay === true);
-        }
-
-        return undefined;
+const getTasks = (queryFilter?: string): Task[] => {
+    if (queryFilter) {
+        return tasks.filter((task) => task.myDay);
     }
 
     return tasks;
