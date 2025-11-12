@@ -1,3 +1,4 @@
+import { FilterError } from "./errorValidation/filterError";
 import { Iteration, Task } from "./taskDto";
 
 const allowedIterations = ["daily", "weekly", "monthly", "yearly", null];
@@ -21,4 +22,12 @@ export const isValidTask = (task: Task): boolean => {
         (task.dueDate === undefined || isValidDueDate(task.dueDate)) &&
         (task.repeat === undefined || isValidIteration(task.repeat))
     );
+}
+
+export const validateFilter = (filter?: string) => {
+    if (!filter) return;
+
+    if (filter === 'myday') return filter;
+
+    throw new FilterError('invalid filter');
 }
