@@ -3,7 +3,11 @@ import { TaskNotfoundError } from "../errorValidation/taskNotFoundError";
 import { CreateTaskDetails, Task } from "../taskDto";
 import { v4 as uuidv4 } from "uuid";
 
-const getAllTasks = (): Task[] => {
+const getTasks = (queryFilter?: string): Task[] => {
+    if (queryFilter) {
+        return tasks.filter((task) => task.myDay);
+    }
+
     return tasks;
 }
 
@@ -42,7 +46,7 @@ const updateTask = (id: string, updatedTask: Task): Task => {
 }
 
 export default {
-    getAllTasks,
+    getTasks,
     getTaskById,
     deleteTaskById,
     createTask,

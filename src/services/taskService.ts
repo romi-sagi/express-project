@@ -1,8 +1,8 @@
 import taskDal from "../dal/taskDal";
 import { CreateTaskDetails, Task } from "../taskDto";
 
-const getAllTasks = (): Task[] => {
-    return taskDal.getAllTasks();
+const getTasks = (queryFilter?: string): Task[] => {
+    return taskDal.getTasks(queryFilter);
 }
 
 const getTaskById = (id: string): Task | undefined => {
@@ -22,7 +22,7 @@ const updateTask = (taskId: string, updatedTask: Task): Task => {
 }
 
 export default {
-    getAllTasks,
+    getTasks,
     getTaskById,
     deleteTaskById,
     createTask,
