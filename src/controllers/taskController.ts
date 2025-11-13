@@ -73,6 +73,11 @@ const createTask = (request: Request<CreateTaskDetails>, response: Response) => 
 const updateTask = (request: Request<TaskIdParams>, response: Response) => {
     try {
         const taskId = request.params.id;
+
+        if (!isValidTask(request.body)) {
+            return response.status(400).send({ error: "Invalid Task" });
+        }
+
         const task = taskService.updateTask(taskId, request.body)
 
         response.status(201).json(convertTaskToDto(task));

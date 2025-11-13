@@ -21,7 +21,7 @@ const getIndexById = (id: string): number => {
 
 const deleteTaskById = (id: string): void => {
     const index = getIndexById(id);
-    if (index === -1)  throw new TaskNotfoundError('task not found');
+    if (index === -1) throw new TaskNotfoundError('task not found');
 
     tasks.splice(index, 1);
 }
@@ -40,7 +40,8 @@ const updateTask = (id: string, updatedTask: Task): Task => {
     const index = getIndexById(id);
     if (index === -1) throw new TaskNotfoundError('task not found');
 
-    tasks[index] = { ...tasks[index], ...updatedTask };
+    updatedTask.id = id;
+    tasks[index] = updatedTask;
 
     return tasks[index];
 }
