@@ -4,6 +4,7 @@ import taskService from "../services/taskService";
 import { CreateTaskDetails } from "../taskDto";
 import { isValidTask, validateFilter } from "../validation";
 import { FilterError } from "../errorValidation/filterError";
+import { TaskNotfoundError } from "../errorValidation/taskNotFoundError";
 
 type TaskIdParams = { id: string };
 
@@ -40,13 +41,15 @@ const getTaskById = (request: Request<TaskIdParams>, response: Response) => {
 const deleteTaskById = (request: Request<TaskIdParams>, response: Response) => {
     try {
         const taskId = request.params.id;
-        const isDeleted = taskService.deleteTaskById(taskId);
-
-        if (!isDeleted) return response.status(404).send({ message: 'task not found' });
+        taskService.deleteTaskById(taskId);
 
         return response.status(200).send({ deleted: true });
 
     } catch (err) {
+        if (err instanceof TaskNotfoundError) {
+            return response.status(404).send({ message: 'task not found' });
+        }
+
         response.status(500).send({ message: "internal error occurred" });
     }
 }
@@ -66,9 +69,32 @@ const createTask = (request: Request<CreateTaskDetails>, response: Response) => 
     }
 }
 
+
+const updateTask = (request: Request<TaskIdParams>, response: Response) => {
+    try {
+        const taskId = request.params.id;
+
+        if (!isValidTask(request.body)) {
+            return response.status(400).send({ error: "Invalid Task" });
+        }
+
+        const task = taskService.updateTask(taskId, request.body)
+
+        response.status(201).json(convertTaskToDto(task));
+    } catch (err) {
+        if (err instanceof TaskNotfoundError) {
+            return response.status(404).send({ message: 'task not found' });
+        }
+
+        response.status(500).send({ message: "internal error occurred" });
+    }
+}
+
+
 export default {
     getTasks,
     getTaskById,
     deleteTaskById,
-    createTask
+    createTask,
+    updateTask
 };

@@ -17,9 +17,14 @@ export const createTask = (requestBody: CreateTaskDetails) => {
     return taskDal.createTask(requestBody);
 }
 
+const updateTask = (taskId: string, updatedTask: Task): Task => {
+    return taskDal.updateTask(taskId, updatedTask)
+}
+
 export default {
     getTasks,
     getTaskById,
     deleteTaskById,
-    createTask
+    createTask,
+    updateTask
 };
