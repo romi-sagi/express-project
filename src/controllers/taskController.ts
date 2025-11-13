@@ -1,0 +1,100 @@
+import { Request, Response } from "express";
+import { convertTaskToDto } from "../converters/taskConverter";
+import taskService from "../services/taskService";
+import { CreateTaskDetails } from "../taskDto";
+import { isValidTask, validateFilter } from "../validation";
+import { FilterError } from "../errorValidation/filterError";
+import { TaskNotfoundError } from "../errorValidation/taskNotFoundError";
+
+type TaskIdParams = { id: string };
+
+const getTasks = (request: Request<{}, {}, {}, { filter?: string }>, response: Response) => {
+    try {
+        const validFilter = validateFilter(request.query.filter)
+
+        const tasks = taskService.getTasks(validFilter)
+
+        return response.status(200).json(tasks.map(convertTaskToDto));
+
+    } catch (err) {
+        if (err instanceof FilterError) return response.status(400).send({ error: "Invalid Filter" });
+
+        response.status(500).send({ message: "internal error occurred" });
+    }
+}
+
+const getTaskById = (request: Request<TaskIdParams>, response: Response) => {
+    const taskId = request.params.id;
+
+    try {
+        const task = taskService.getTaskById(taskId)
+
+        if (!task) return response.status(404).send({ message: 'task not found' });
+
+        return response.status(200).json(convertTaskToDto(task));
+
+    } catch (err) {
+        response.status(500).send({ message: "internal error occurred" });
+    }
+}
+
+const deleteTaskById = (request: Request<TaskIdParams>, response: Response) => {
+    try {
+        const taskId = request.params.id;
+        taskService.deleteTaskById(taskId);
+
+        return response.status(200).send({ deleted: true });
+
+    } catch (err) {
+        if (err instanceof TaskNotfoundError) {
+            return response.status(404).send({ message: 'task not found' });
+        }
+
+        response.status(500).send({ message: "internal error occurred" });
+    }
+}
+
+const createTask = (request: Request<CreateTaskDetails>, response: Response) => {
+    try {
+        if (!isValidTask(request.body)) {
+            return response.status(400).send({ error: "Invalid Task" });
+        }
+
+        const newTask = taskService.createTask(request.body);
+
+        response.status(201).send({ message: `task ${newTask.id} created` });
+    }
+    catch (err) {
+        response.status(500).send({ message: "internal error occurred" });
+    }
+}
+
+
+const updateTask = (request: Request<TaskIdParams>, response: Response) => {
+    try {
+        const taskId = request.params.id;
+
+        if (!isValidTask(request.body)) {
+            return response.status(400).send({ error: "Invalid Task" });
+        }
+
+        const task = taskService.updateTask(taskId, request.body)
+
+        response.status(201).json(convertTaskToDto(task));
+    } catch (err) {
+        if (err instanceof TaskNotfoundError) {
+            return response.status(404).send({ message: 'task not found' });
+        }
+
+        response.status(500).send({ message: "internal error occurred" });
+    }
+}
+
+
+export default {
+    getTasks,
+    getTaskById,
+    deleteTaskById,
+    createTask,
+    updateTask
+};
